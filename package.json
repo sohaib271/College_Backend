@@ -1,0 +1,33 @@
+{
+  "name": "college_backend",
+  "version": "1.0.0",
+  "description": "This server is responsible for delivering all the data to client. ",
+  "homepage": "https://github.com/sohaib271/College_Backend#readme",
+  "bugs": {
+    "url": "https://github.com/sohaib271/College_Backend/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sohaib271/College_Backend.git"
+  },
+  "license": "ISC",
+  "author": "M.Sohaib Imran",
+  "type": "module",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start":"node app.js"
+  },
+  "dependencies": {
+    "@prisma/client": "^6.18.0",
+    "bcrypt": "^6.0.0",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.3",
+    "express": "^5.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "pg": "^8.16.3"
+  },
+  "devDependencies": {
+    "prisma": "^6.18.0"
+  }
+}
