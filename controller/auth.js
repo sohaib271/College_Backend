@@ -15,7 +15,7 @@ class Auth{
   async findUser(email,password){
     const user=await this.checkUser(email);
     const checkPass=await bcrypt.compare(password,user.password);
-    if(!checkPass || !user) return "Wrong email Password";
+    if(!checkPass || !user) return null;
 
     return user;
   }
@@ -23,7 +23,7 @@ class Auth{
   async generateToken(email,password){
     const user=await this.findUser(email,password);
 
-    if(!user) return user;
+    if(user==null) return null;
 
     const token=jwt.sign({id:user.id,name:user.name,email:user.email,role:user.role},process.env.JWT_SECRET,{expiresIn:process.env.JWT_EXPIRY});
     return token;
@@ -32,9 +32,9 @@ class Auth{
 
   decodeToken(token){
     try {
-      return jwt.verify(token,JWT_SECRET);
+      return jwt.verify(token,process.env.JWT_SECRET);
     } catch (error) {
-      return {};
+      return null;
     }
   }
 }

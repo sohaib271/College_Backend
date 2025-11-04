@@ -31,8 +31,8 @@ model User {
   id           Int        @id @default(autoincrement())
   name         String
   email        String     @unique
-  phoneNo      String
-  address      String
+  phoneNo      String?
+  address      String?
   dept         String?
   session      Session?  
   password     String

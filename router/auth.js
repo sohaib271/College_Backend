@@ -1,6 +1,7 @@
 import express from "express";
 import prisma from "../model/prisma.js";
 import { User } from "../controller/auth.js";
+import authMiddleware from "../middleware/auth.js";
 
 const router=express.Router();
 
@@ -36,7 +37,20 @@ router.post("/register",async (req,res)=>{
 
   if(!newUser) return res.json({err:"Error Registering User"});
   return res.status(200).json({success:"Successfully Registered"});
-})
+});
 
+router.post("/get-token",async(req,res)=>{
+  const {email,password}=req.body;
+
+  const token=await User.generateToken(email,password);
+  if(token==null) return res.json({err:"Wrong email or password"});
+
+  return res.json({token});
+
+});
+
+router.get("/get-info",authMiddleware,(req,res)=>{
+  return res.status(200).json({user:req.user});
+})
 
 export default router;
