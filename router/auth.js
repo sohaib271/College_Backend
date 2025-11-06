@@ -22,7 +22,6 @@ router.post("/register",async (req,res)=>{
   const hash=await User.hashPassword(password);
 
   const newUser=await prisma.user.create({data:{
-    id:id,
     name,
     email,
     student_id,
@@ -65,7 +64,7 @@ router.get("/all",async(req,res)=>{
     const cleanedUser={};
 
     for(const key in m){
-      if(m[key]!==null && key!=='password'){
+      if(m[key]!==null){
         cleanedUser[key]=m[key];
       }
     }
