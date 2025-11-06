@@ -16,13 +16,13 @@ router.post("/register",async (req,res)=>{
   if(role==="Student"){
     const lastStudent=await prisma.user.findFirst({where:{role:"Student"},orderBy:{id:"desc"}});
 
-    id=lastStudent?lastStudent.id+1:300;
+    id=lastStudent?lastStudent?.id+1:300;
   }
 
   const hash=await User.hashPassword(password);
 
   const newUser=await prisma.user.create({data:{
-    id,
+    id:id,
     name,
     email,
     student_id,
