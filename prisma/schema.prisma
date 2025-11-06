@@ -29,6 +29,11 @@ enum Session{
 
 model User {
   id           Int        @id @default(autoincrement())
+  student_id   String?
+  teacher_id   String?
+  admin_id     String?
+  hod_id       String?
+  principal_id String?    
   name         String
   email        String     @unique
   phoneNo      String?
@@ -39,6 +44,7 @@ model User {
   created_at   DateTime   @default(now())
   role         Role
   batch        String?
+  semester     String? 
   designation  String?
 }
 

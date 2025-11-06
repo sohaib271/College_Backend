@@ -6,7 +6,7 @@ import authMiddleware from "../middleware/auth.js";
 const router=express.Router();
 
 router.post("/register",async (req,res)=>{
-  const {name,email,phoneNo,address,dept,session,password,role,batch,designation}=req.body;
+  const {name,email,phoneNo,address,dept,session,password,role,batch,designation,semester,student_id,teacher_id,principal_id,admin_id,hod_id}=req.body;
   const isUser=await User.checkUser(email);
 
   if(isUser) return res.json({err:"Email already exists"});
@@ -25,6 +25,11 @@ router.post("/register",async (req,res)=>{
     id,
     name,
     email,
+    student_id,
+    teacher_id,
+    admin_id,
+    hod_id,
+    principal_id,
     phoneNo,
     address,
     dept,
@@ -32,7 +37,8 @@ router.post("/register",async (req,res)=>{
     password:hash,
     role,
     batch,
-    designation
+    designation,
+    semester
   }})
 
   if(!newUser) return res.json({err:"Error Registering User"});
@@ -51,6 +57,22 @@ router.post("/get-token",async(req,res)=>{
 
 router.get("/get-info",authMiddleware,(req,res)=>{
   return res.status(200).json({user:req.user});
+});
+
+router.get("/all",async(req,res)=>{
+  const users=await prisma.user.findMany();
+  const filteredUser=users.map((m)=>{
+    const cleanedUser={};
+
+    for(const key in m){
+      if(m[key]!==null && key!=='password'){
+        cleanedUser[key]=m[key];
+      }
+    }
+    return cleanedUser;
+  });
+
+  return res.json(filteredUser);
 })
 
 export default router;
