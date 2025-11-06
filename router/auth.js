@@ -22,6 +22,7 @@ router.post("/register",async (req,res)=>{
   const hash=await User.hashPassword(password);
 
   const newUser=await prisma.user.create({data:{
+    id,
     name,
     email,
     student_id,
