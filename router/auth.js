@@ -77,7 +77,7 @@ router.get("/all",async(req,res)=>{
 });
 
 router.patch("/update-profile/:id",upload.single("image"),async (req,res)=>{
-  const userId=req.params.id;
+  const userId=parseInt(req.params.id);
   const {name}=req.body;
 
   const updateData={};
