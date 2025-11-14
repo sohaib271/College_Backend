@@ -2,6 +2,7 @@ import express from "express";
 import prisma from "../model/prisma.js";
 import { User } from "../controller/auth.js";
 import authMiddleware from "../middleware/auth.js";
+import { upload } from "../model/cloud.js";
 
 const router=express.Router();
 
@@ -73,6 +74,27 @@ router.get("/all",async(req,res)=>{
   });
 
   return res.json(filteredUser);
+});
+
+router.patch("/update-profile/:id",upload.single("image"),async (req,res)=>{
+  const userId=req.params.id;
+  const {name}=req.body;
+
+  const updateData={};
+
+  const image=req.file?req.file.path:null;
+
+  if(name) updateData.name=name;
+  if(image) updateData.image=image;
+  
+  if(Object.keys(updateData).length===0){
+    return res.status(400).json({err:"Empty fieds from user"});
+  }
+  const upd=await prisma.user.update({where:{id:userId},data:updateData});
+
+  if(upd){
+    return res.status(200).json({msg:"Successfull updated"});
+  }
 })
 
 export default router;

@@ -33,6 +33,7 @@ model User {
   teacher_id   String?
   admin_id     String?
   hod_id       String?
+  image        String @default("") 
   principal_id String?    
   name         String
   email        String     @unique
