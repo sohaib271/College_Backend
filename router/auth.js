@@ -83,7 +83,8 @@ router.post("/find-number",async(req,res)=>{
   if(!user.id){
     return res.status(404).json({msg:"Phone number does not exist"});
   }
-  return res.json({user});
+  const cleanedUser=Object.fromEntries(Object.entries(user).filter(([_,v])=>v!==null));
+  return res.json({cleanedUser});
 })
 
 router.patch("/update-profile/:id",upload.single("image"),async (req,res)=>{
