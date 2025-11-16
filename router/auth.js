@@ -76,9 +76,20 @@ router.get("/all",async(req,res)=>{
   return res.json(filteredUser);
 });
 
+router.post("/find-number",async(req,res)=>{
+  const {phoneNo}=req.body;
+
+  const user=await prisma.user.findUnique({where:{phoneNo:phoneNo}});
+  if(!user.id){
+    return res.status(404).json({msg:"Phone number does not exist"});
+  }
+  return res.json({user});
+})
+
 router.patch("/update-profile/:id",upload.single("image"),async (req,res)=>{
   const userId=parseInt(req.params.id);
-  const {name}=req.body;
+  const {name,password}=req.body;
+  const hashedPassword=await User.hashPassword(password);
 
   const updateData={};
 
@@ -86,6 +97,7 @@ router.patch("/update-profile/:id",upload.single("image"),async (req,res)=>{
 
   if(name) updateData.name=name;
   if(image) updateData.image=image;
+  if(password) updateData.password=hashedPassword;
   
   if(Object.keys(updateData).length===0){
     return res.status(400).json({err:"Empty fieds from user"});
@@ -95,6 +107,6 @@ router.patch("/update-profile/:id",upload.single("image"),async (req,res)=>{
   if(upd){
     return res.status(200).json({msg:"Successfull updated"});
   }
-})
+});
 
 export default router;
