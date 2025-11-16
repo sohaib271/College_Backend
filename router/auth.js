@@ -79,7 +79,7 @@ router.get("/all",async(req,res)=>{
 router.post("/find-number",async(req,res)=>{
   const {phoneNo}=req.body;
 
-  const user=await prisma.user.findUnique({where:{phoneNo:phoneNo}});
+  const user=await prisma.user.findFirst({where:{phoneNo:phoneNo}});
   if(!user.id){
     return res.status(404).json({msg:"Phone number does not exist"});
   }
