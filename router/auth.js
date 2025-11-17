@@ -87,21 +87,12 @@ router.post("/find-number",async(req,res)=>{
   return res.json({cleanedUser});
 });
 
-router.patch("/forget-password/:id",async(req,res)=>{
-  const {password}=req.body;
-  const userId=parseInt(req.params.id);
-  if(!password) return res.json({msg:"No password provided"});
-  const hashedPassword=await User.hashPassword(password);
-  const updatePassword=await prisma.user.update({where:{id:userId},data:{password:hashedPassword}});
-
-  if(!updatePassword) return res.json({msg:"Error updating password"});
-
-  return res.status(200).json({msg:"Successfully updated"});
-})
-
 router.patch("/update-profile/:id",upload.single("image"),async (req,res)=>{
   const userId=parseInt(req.params.id);
-  const {name}=req.body;
+  const {name,password}=req.body;
+  const hashedPassword=null;
+
+  if(password) hashedPassword=await User.hashPassword(password);
 
   const updateData={};
 
@@ -109,6 +100,7 @@ router.patch("/update-profile/:id",upload.single("image"),async (req,res)=>{
 
   if(name) updateData.name=name;
   if(image) updateData.image=image;
+  if(hashedPassword!=null) updateData.password=hashedPassword;
   
   if(Object.keys(updateData).length===0){
     return res.status(400).json({err:"Empty fieds from user"});
