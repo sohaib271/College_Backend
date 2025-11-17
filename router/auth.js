@@ -90,7 +90,7 @@ router.post("/find-number",async(req,res)=>{
 router.patch("/update-profile/:id",upload.single("image"),async (req,res)=>{
   const userId=parseInt(req.params.id);
   const {name,password}=req.body;
-  const hashedPassword=null;
+  let hashedPassword=null;
 
   if(password) hashedPassword=await User.hashPassword(password);
 
@@ -100,10 +100,10 @@ router.patch("/update-profile/:id",upload.single("image"),async (req,res)=>{
 
   if(name) updateData.name=name;
   if(image) updateData.image=image;
-  if(hashedPassword!=null) updateData.password=hashedPassword;
+  if(hashedPassword!==null) updateData.password=hashedPassword;
   
   if(Object.keys(updateData).length===0){
-    return res.status(400).json({err:"Empty fieds from user"});
+    return res.status(400).json({err:"Empty fields from user"});
   }
   const upd=await prisma.user.update({where:{id:userId},data:updateData});
 
