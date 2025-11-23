@@ -14,7 +14,7 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-enum Role{
+enum Role {
   Student
   Teacher
   Principal
@@ -22,31 +22,40 @@ enum Role{
   Admin
 }
 
-enum Session{
+enum Session {
   Morning
   Evening
 }
 
 model User {
-  id           Int        @id @default(autoincrement())
+  id           Int      @id @default(autoincrement())
   student_id   String?
   teacher_id   String?
   admin_id     String?
   hod_id       String?
-  image        String @default("") 
-  principal_id String?    
+  image        String   @default("")
+  principal_id String?
   name         String
-  email        String     @unique
+  email        String   @unique
   phoneNo      String?
   address      String?
   dept         String?
-  session      Session?  
+  session      Session?
   password     String
-  created_at   DateTime   @default(now())
+  created_at   DateTime @default(now())
   role         Role
   batch        String?
-  semester     String? 
+  semester     String?
   designation  String?
+  post         Posts[]
 }
 
-
+model Posts {
+  id          Int     @id @default(autoincrement())
+  title       String
+  description String
+  postedBy    Int
+  tag         String
+  postImage   String?
+  user        User    @relation(fields: [postedBy], references: [id])
+}

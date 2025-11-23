@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import authRouter from "./router/auth.js";
+import postRouter from "./router/post.js";
 
 dotenv.config();
 
@@ -18,6 +19,7 @@ app.get("/college",(req,res)=>{
 });
 
 app.use("/user",authRouter);
+app.use("/activity",postRouter);
 
 const Port=8000;
 
