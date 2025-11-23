@@ -17,7 +17,7 @@ import { upload } from "../model/cloud.js";
 
 const router=express.Router();
 
-router.post("/create/:id",upload.single("post"),async(req,res)=>{
+router.post("/create/:id",upload.single("postImage"),async(req,res)=>{
  try {
    const postedBy=parseInt(req.params.id);
   const {title,description,tag}=req.body;
