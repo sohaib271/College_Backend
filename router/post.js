@@ -1,6 +1,6 @@
-import prisma from "../model/prisma";
+import prisma from "../model/prisma.js";
 import express from "express"
-import { upload } from "../model/cloud";
+import { upload } from "../model/cloud.js";
 
   const removeNulls = (obj) => {
       return Object.fromEntries(
