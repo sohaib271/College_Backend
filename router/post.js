@@ -17,12 +17,12 @@ import { upload } from "../model/cloud.js";
 
 const router=express.Router();
 
-router.post("/create/:id",upload.single("postImage"),async(req,res)=>{
+router.post("/create/:id",upload.array("postImage",10),async(req,res)=>{
  try {
    const postedBy=parseInt(req.params.id);
   const {title,description,tag}=req.body;
 
-  const image=req.file?req.file.path:null;
+  const image=req.files?req.files.map(file => file.path):[];
 
   const postData=await prisma.posts.create({data:{
     title,

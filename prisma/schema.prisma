@@ -53,9 +53,10 @@ model User {
 model Posts {
   id          Int     @id @default(autoincrement())
   title       String
-  description String
+  description String?
   postedBy    Int
   tag         String
-  postImage   String?
+  postImage   String[]
+  createdAt   DateTime @default(now())
   user        User    @relation(fields: [postedBy], references: [id])
 }
