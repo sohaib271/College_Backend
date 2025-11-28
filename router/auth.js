@@ -112,4 +112,13 @@ router.patch("/update-profile/:id",upload.single("image"),async (req,res)=>{
   }
 });
 
+router.delete("/remove-user/:id",async (req,res)=>{
+  const userId=parseInt(req.params.id);
+  const user=await User.delUser(userId);
+
+  if(!user) return res.json({msg:"Error deleting user"});
+
+  return res.status(200).json({msg:"Successfully deleted"});
+})
+
 export default router;

@@ -3,17 +3,20 @@ import express from "express"
 import { upload } from "../model/cloud.js";
 
   const removeNulls = (obj) => {
-      return Object.fromEntries(
-        Object.entries(obj)
-          .filter(([_, v]) => v !== null)
-          .map(([k, v]) => [
-            k,
-            v !== null && typeof v === "object" && !Array.isArray(v)
-              ? removeNulls(v)
-              : v
-          ])
-      );
-    };
+  return Object.fromEntries(
+    Object.entries(obj)
+      .filter(([_, v]) => v !== null)
+      .map(([k, v]) => [
+        k,
+        v instanceof Date
+          ? v
+          : v !== null && typeof v === "object" && !Array.isArray(v)
+          ? removeNulls(v)
+          : v
+      ])
+  );
+};
+
 
 const router=express.Router();
 
