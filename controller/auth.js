@@ -29,18 +29,14 @@ class Auth{
     return token;
   }
 
-  async removeActivity(id){
-    return await prisma.posts.deleteMany({where:{postedBy:id}});
-     
-  }
+ async delUser(id) {
+  await prisma.posts.deleteMany({ where: { postedBy: id } });
+  const user = await prisma.user.delete({ where: { id } });
 
-  async delUser(id){
-    const user=await prisma.user.delete({where:{id}});
-    if(!user) return null;
-    const act=await this.removeActivity(user.id);
-    if(!act) return null;
-    return true;
-  }
+  if(!user) return false;
+
+  return true;
+}
 
 
   decodeToken(token){
