@@ -66,4 +66,16 @@ router.get("/my-posts/:id",async(req,res)=>{
   }
 });
 
+router.delete("/delete-one/:id",async (req,res)=>{
+  const postId=parseInt(req.params.id);
+  try {
+    const delPost=await prisma.posts.delete({where:{id:postId}});
+    if(!delPost) return res.json({msg:"Error deleting post"});
+
+    return res.status(200).json({msg:"Successfully deleted"});
+  } catch (error) {
+    return res.status(500),json({msg:error.msg});
+  }
+})
+
 export default router;

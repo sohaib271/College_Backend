@@ -44,6 +44,7 @@ model User {
   password     String
   created_at   DateTime @default(now())
   role         Role
+  class        String? 
   batch        String?
   semester     String?
   designation  String?
