@@ -7,7 +7,7 @@ import { upload } from "../model/cloud.js";
 const router=express.Router();
 
 router.post("/register",async (req,res)=>{
-  const {name,email,phoneNo,address,dept,session,password,role,batch,designation,semester,student_id,teacher_id,principal_id,admin_id,hod_id}=req.body;
+  const {name,email,phoneNo,address,dept,session,password,role,batch,designation,semester,student_id,teacher_id,principal_id,admin_id,hod_id,classs}=req.body;
   const isUser=await User.checkUser(email);
 
   if(isUser) return res.json({err:"Email already exists"});
@@ -39,7 +39,8 @@ router.post("/register",async (req,res)=>{
     role,
     batch,
     designation,
-    semester
+    semester,
+    classs
   }})
 
   if(!newUser) return res.json({err:"Error Registering User"});
