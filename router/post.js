@@ -1,8 +1,8 @@
 import prisma from "../model/prisma.js";
-import express from "express"
+import express from "express";
 import { upload } from "../model/cloud.js";
 
-  const removeNulls = (obj) => {
+const removeNulls = (obj) => {
   return Object.fromEntries(
     Object.entries(obj)
       .filter(([_, v]) => v !== null)
@@ -12,70 +12,78 @@ import { upload } from "../model/cloud.js";
           ? v
           : v !== null && typeof v === "object" && !Array.isArray(v)
           ? removeNulls(v)
-          : v
+          : v,
       ])
   );
 };
 
+const router = express.Router();
 
-const router=express.Router();
+router.post("/create/:id", upload.array("postImage", 10), async (req, res) => {
+  try {
+    const postedBy = parseInt(req.params.id);
+    const { title, description, tag } = req.body;
 
-router.post("/create/:id",upload.array("postImage",10),async(req,res)=>{
- try {
-   const postedBy=parseInt(req.params.id);
-  const {title,description,tag}=req.body;
+    const image = req.files ? req.files.map((file) => file.path) : [];
 
-  const image=req.files?req.files.map(file => file.path):[];
+    const postData = await prisma.posts.create({
+      data: {
+        title,
+        tag,
+        description,
+        postImage: image,
+        postedBy,
+      },
+    });
+    if (!postData) return res.json({ msg: "Missing fields from user" });
 
-  const postData=await prisma.posts.create({data:{
-    title,
-    tag,
-    description,
-    postImage:image,
-    postedBy
-  }});
-if(!postData) return res.json({msg:"Missing fields from user"});
-
-return res.json({msg:"Post Created!"});
- } catch (error) {
-  return res.status(400).json({msg:error.message});
- }
+    return res.json({ msg: "Post Created!" });
+  } catch (error) {
+    return res.status(400).json({ msg: error.message });
+  }
 });
 
-router.get("/all",async(req,res)=>{
-   try {
+router.get("/all", async (req, res) => {
+  try {
     let posts = await prisma.posts.findMany({
-      include: { user: {select:{name:true,image:true,dept:true}} }
+      include: {
+        user: { select: { name: true, image: true, dept: true } },
+      },
+      orderBy:{createdAt:"desc"}
     });
     posts = posts.map((post) => removeNulls(post));
     return res.json(posts);
   } catch (err) {
     res.status(500).json({ message: "Server error" });
-  }   
+  }
 });
 
-router.get("/my-posts/:id",async(req,res)=>{
-  const userId=parseInt(req.params.id);
+router.get("/my-posts/:id", async (req, res) => {
+  const userId = parseInt(req.params.id);
 
   try {
-    let posts=await prisma.posts.findMany({where:{postedBy:userId},include:{user:true}});
-    posts=posts.map((post) => removeNulls(post));
-    return res.json(posts)
+    let posts = await prisma.posts.findMany({
+      where: { postedBy: userId },
+      include: { user: true },
+      orderBy: { createdAt: "desc" },
+    });
+    posts = posts.map((post) => removeNulls(post));
+    return res.json(posts);
   } catch (error) {
     res.status(500).json({ message: "Server error" });
   }
 });
 
-router.delete("/delete-one/:id",async (req,res)=>{
-  const postId=parseInt(req.params.id);
+router.delete("/delete-one/:id", async (req, res) => {
+  const postId = parseInt(req.params.id);
   try {
-    const delPost=await prisma.posts.delete({where:{id:postId}});
-    if(!delPost) return res.json({msg:"Error deleting post"});
+    const delPost = await prisma.posts.delete({ where: { id: postId } });
+    if (!delPost) return res.json({ msg: "Error deleting post" });
 
-    return res.status(200).json({msg:"Successfully deleted"});
+    return res.status(200).json({ msg: "Successfully deleted" });
   } catch (error) {
-    return res.status(500),json({msg:error.msg});
+    return res.status(500), json({ msg: error.msg });
   }
-})
+});
 
 export default router;
