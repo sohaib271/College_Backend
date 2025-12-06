@@ -90,9 +90,10 @@ router.delete("/delete-one/:id", async (req, res) => {
 
 router.post("/like/:id",async(req,res)=>{
   const postId=parseInt(req.params.id);
-  const {likedBy}=parseInt(req.body);
+  const {likedBy}=req.body;
+  const userId=parseInt(likedBy);
   try {
-    const like=await prisma.likes.create({where:{postId},data:{likedBy}});
+    const like=await prisma.likes.create({where:{postId},data:{likedBy:userId}})
     if(!like) return res.json({msg:"Error liking the post"});
     return res.status(200).json({msg:"Post Liked"});
   } catch (error) {
