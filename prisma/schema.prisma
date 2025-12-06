@@ -28,36 +28,70 @@ enum Session {
 }
 
 model User {
-  id           Int      @id @default(autoincrement())
+  id           Int        @id @default(autoincrement())
   student_id   String?
   teacher_id   String?
   admin_id     String?
   hod_id       String?
-  image        String   @default("")
+  image        String     @default("")
   principal_id String?
   name         String
-  email        String   @unique
+  email        String     @unique
   phoneNo      String?
   address      String?
   dept         String?
   session      Session?
   password     String
-  created_at   DateTime @default(now())
+  created_at   DateTime   @default(now())
   role         Role
-  classs        String? 
+  classs       String?
   batch        String?
   semester     String?
   designation  String?
   post         Posts[]
+  likes        Likes[]
+  comments     Comments[]
+  reply        Reply[]
 }
 
 model Posts {
-  id          Int     @id @default(autoincrement())
+  id          Int        @id @default(autoincrement())
   title       String
   description String?
   postedBy    Int
   tag         String
   postImage   String[]
-  createdAt   DateTime @default(now())
-  user        User    @relation(fields: [postedBy], references: [id])
+  createdAt   DateTime   @default(now())
+  user        User       @relation(fields: [postedBy], references: [id])
+  likes       Likes[]
+  comments    Comments[]
+}
+
+model Likes {
+  id        Int      @id @default(autoincrement())
+  likedBy   Int
+  postId    Int
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [likedBy], references: [id])
+  post      Posts    @relation(fields: [postId], references: [id])
+}
+
+model Comments {
+  id        Int     @id @default(autoincrement())
+  commentBy Int
+  postId    Int
+  content   String
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [commentBy], references: [id])
+  post      Posts    @relation(fields: [postId], references: [id])
+  reply     Reply[]
+}
+
+model Reply {
+  id        Int      @id @default(autoincrement())
+  repliedBy Int
+  commentId Int
+  createdAt DateTime @default(now())
+  comment   Comments @relation(fields: [commentId], references: [id])
+  user      User     @relation(fields: [repliedBy], references: [id])
 }
