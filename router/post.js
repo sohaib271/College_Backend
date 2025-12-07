@@ -112,6 +112,24 @@ router.post("/comment/:id",async(req,res)=>{
   } catch (error) {
     return res.status(500).json({msg:error.message});
   }
+});
+
+router.get("/comments/show/:id",async(req,res)=>{
+  const postId=parseInt(req.params.id);
+  const com=await prisma.comments.findMany({where:{postId},include:{user:{select:{name:true,image:true,dept:true}}}});
+
+  if(!com) return res.json({msg:"Error retrieving comments"});
+
+  return res.json({com});
+});
+
+router.get("/likes/detail/:id",async(req,res)=>{
+  const postId=parseInt(req.params.id);
+  const like=await prisma.likes.findMany({where:{postId},include:{user:{select:{name:true,image:true}}}});
+
+  if(!like) return res.json({msg:"Error showing detail"});
+
+  return res.json({like});
 })
 
 export default router;
