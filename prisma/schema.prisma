@@ -56,11 +56,13 @@ model User {
 
 model Posts {
   id          Int        @id @default(autoincrement())
-  title       String
+  title       String?
   description String?
   postedBy    Int
-  tag         String
+  tag         String?
   postImage   String[]
+  video       String?
+  file        String?
   createdAt   DateTime   @default(now())
   user        User       @relation(fields: [postedBy], references: [id])
   likes       Likes[]

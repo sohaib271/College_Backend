@@ -1,0 +1,4 @@
+-- AlterTable
+ALTER TABLE "Posts" ADD COLUMN     "video" TEXT,
+ALTER COLUMN "title" DROP NOT NULL,
+ALTER COLUMN "tag" DROP NOT NULL;

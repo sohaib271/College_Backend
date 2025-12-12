@@ -17,6 +17,23 @@ const storage=new CloudinaryStorage({
   }
 });
 
+const videoStorage=new CloudinaryStorage({
+  cloudinary,
+  params:{
+    folder:"lectures",
+    resource_type:"video"
+  }
+})
+const pdfStorage = new CloudinaryStorage({
+  cloudinary,
+  params: {
+    folder: "pdfs",
+    resource_type: "raw",
+    public_id: (req, file) => `${Date.now()}-${file.originalname.replace(/\s+/g, "_")}`,
+  },
+});
+const uploadPDF = multer({ storage: pdfStorage });
 const upload=multer({storage});
+const uploadVideo=multer({storage:videoStorage});
 
-export {cloudinary,upload};
+export {cloudinary,upload,uploadVideo,uploadPDF};
