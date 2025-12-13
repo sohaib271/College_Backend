@@ -34,6 +34,8 @@ const pdfStorage = new CloudinaryStorage({
 });
 const uploadPDF = multer({ storage: pdfStorage });
 const upload=multer({storage});
-const uploadVideo=multer({storage:videoStorage});
-
+const uploadVideo = multer({
+  storage: videoStorage,
+  limits: { fileSize: 100 * 1024 * 1024 } // 100MB
+});
 export {cloudinary,upload,uploadVideo,uploadPDF};
